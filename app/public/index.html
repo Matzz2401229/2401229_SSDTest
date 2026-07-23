@@ -7,5 +7,18 @@
     <input type="text" name="term" id="term" placeholder="Enter search term">
     <button type="submit">Search</button>
   </form>
+  <p id="error" style="color:red;"></p>
+
+  <script src="/validate.js"></script>
+  <script>
+    document.getElementById('searchForm').addEventListener('submit', function (e) {
+      const term = document.getElementById('term').value;
+      const errorEl = document.getElementById('error');
+      if (!isValidSearchTerm(term)) {
+        e.preventDefault();
+        errorEl.textContent = 'Invalid search term: use ' + MIN_LENGTH + '-' + MAX_LENGTH + ' letters, numbers, or spaces only.';
+      }
+    });
+  </script>
 </body>
 </html>
