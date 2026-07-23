@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node server.js",
     "test:integration": "mocha test/integration.test.js --timeout 10000",
-    "test:ui": "mocha test/ui.test.js --timeout 30000"
+    "test:ui": "mocha test/ui.test.js --timeout 30000",
+    "lint": "eslint ."
   },
   "dependencies": {
     "express": "^4.19.2",
@@ -14,6 +15,10 @@
   "devDependencies": {
     "mocha": "^10.4.0",
     "supertest": "^7.0.0",
-    "selenium-webdriver": "^4.21.0"
+    "selenium-webdriver": "^4.21.0",
+    "eslint": "^9.9.0",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-no-unsanitized": "^4.1.2",
+    "@microsoft/eslint-formatter-sarif": "^3.1.0"
   }
 }

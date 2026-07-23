@@ -1,3 +1,7 @@
 node_modules/
 *.log
 git-server/data/
+*.sarif
+sonarqube/data/
+sonarqube/extensions/
+sonarqube/logs/

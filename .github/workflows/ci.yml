@@ -9,6 +9,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
@@ -20,6 +23,17 @@ jobs:
       - name: Install app dependencies
         working-directory: app
         run: npm install
+
+      - name: Run ESLint (security rules) with SARIF output
+        working-directory: app
+        run: npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true
+
+      - name: Upload ESLint SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: app/eslint-results.sarif
 
       - name: Start app stack
         run: docker compose up -d --build db app
