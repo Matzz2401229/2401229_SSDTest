@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 const { isValidSearchTerm } = require('./public/validate.js');
 
 const app = express();
+app.disable('x-powered-by');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -25,7 +26,7 @@ app.post('/search', async (req, res) => {
   await pool.query(`INSERT INTO \`${TABLE}\` (search_query) VALUES (?)`, [term]);
 
   res.send(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head><title>Result</title></head>
 <body>
   <h1>Search Result</h1>

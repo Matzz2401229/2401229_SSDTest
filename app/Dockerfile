@@ -2,6 +2,8 @@ FROM node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb836
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install --omit=dev
-COPY . .
+COPY server.js ./
+COPY public ./public
+USER node
 EXPOSE 3000
 CMD ["node", "server.js"]
