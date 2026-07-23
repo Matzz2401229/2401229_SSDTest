@@ -24,7 +24,7 @@ services:
       - GITEA__server__ROOT_URL=http://localhost:3000/
       - GITEA__security__INSTALL_LOCK=true
     volumes:
-      - gitea_data:/data
+      - ./git-server/data:/data
     ports:
       - "3000:3000"
       - "2222:22"
@@ -64,5 +64,4 @@ services:
       retries: 10
 
 volumes:
-  gitea_data:
   db_data:

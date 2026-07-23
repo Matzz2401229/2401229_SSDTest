@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install app dependencies
+        working-directory: app
+        run: npm install
+
+      - name: Start app stack
+        run: docker compose up -d --build db app
+
+      - name: Wait for app to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:3001/ > /dev/null; then
+              echo "App is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App did not start in time" && exit 1
+
+      - name: Run integration tests
+        working-directory: app
+        run: npx mocha test/integration.test.js --timeout 10000
+
+      - name: OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'search-app'
+          path: 'app'
+          format: 'HTML'
+
+      - name: Upload Dependency-Check report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run UI tests
+        working-directory: app
+        run: npx mocha test/ui.test.js --timeout 30000
+
+      - name: Stop stack
+        if: always()
+        run: docker compose down
